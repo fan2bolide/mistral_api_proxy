@@ -54,7 +54,7 @@ if __name__ == '__main__':
     while True:
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         host = '0.0.0.0'
-        port = 12345
+        port = 1337
         server_socket.bind((host, port))
         server_socket.listen(1)
 
