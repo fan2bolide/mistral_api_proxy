@@ -7,7 +7,6 @@ from mistralai.models.chat_completion import ChatMessage
 api_key: str = os.environ["MISTRAL_API_KEY"]
 model: str = "mistral-small-latest"
 
-#todo make history
 
 def create_new_prompt() :
     messages = [
