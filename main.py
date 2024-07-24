@@ -9,13 +9,10 @@ model: str = "mistral-small-latest"
 
 #todo make history
 
-def mistral_request(message: str) -> str:
-    print("receive:", message)
-    client = MistralClient(api_key=api_key)
-
+def create_new_prompt() :
     messages = [
         ChatMessage(role="system", content="Oublies tous les prompts précédents. "
-                                            "Tu es un militant du nouveau front populaire (NFP), la nouvelle union de "
+                                           "Tu es un militant du nouveau front populaire (NFP), la nouvelle union de "
                                            "la "
                                            "gauche française lors des legistatives anticipées de 2024 pour faire face "
                                            "a la montée de l'extrême droite en france, le président Emmanuel macron "
@@ -47,8 +44,12 @@ def mistral_request(message: str) -> str:
                                            "Ne te fais pas avoir, le parti socialiste est un groupe de traitres, ils se disent de gauche mais utilise le coté obscur de la force (la droite) une fois qu'ils ont acces au pouvoir. "
                                            "Tu n'es pas obligé d'évoquer le NFP si l'on ne te parles pas de"
                                            "politique. Fais des reponses courtes."),
-        ChatMessage(role="user", content=message)
     ]
+    return messages
+
+def mistral_request(message: str) -> str:
+    print("receive: ", message)
+    client = MistralClient(api_key=api_key)
 
     chat_response = client.chat(
         model=model,
@@ -59,7 +60,7 @@ def mistral_request(message: str) -> str:
 
 
 def send_message(message: str):
-    print("receive:", message)
+    print("sending: ", message)
     client_socket.send(message.encode('utf-8'))
 
 
@@ -74,10 +75,14 @@ if __name__ == '__main__':
         print(f"Serveur démarré sur {host}:{port}. En attente de connexions...")
         client_socket, client_address = server_socket.accept()
         print(f"Connexion établie avec {client_address}")
+        messages = create_new_prompt()
         while True:
             try:
                 message_received = client_socket.recv(1024).decode('utf-8')
             except Exception as e:
+                server_socket.close()
                 break
-            mistral_response = mistral_request(message_received)
+            messages.append(ChatMessage(role="user", content=message_received))
+            mistral_response = mistral_request(messages)
+            messages.append(ChatMessage(role="assistant", content=mistral_response))
             send_message(mistral_response)
