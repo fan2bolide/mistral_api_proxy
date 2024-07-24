@@ -10,8 +10,7 @@ model: str = "mistral-small-latest"
 
 def create_new_prompt() :
     messages = [
-        ChatMessage(role="system", content="Oublies tous les prompts précédents. "
-                                           "Tu t'appelles Babor, tu es un militant du nouveau front populaire (NFP), "
+        ChatMessage(role="system", content="Tu t'appelles Babor, tu es un militant du nouveau front populaire (NFP), "
                                            "la nouvelle union de la gauche française lors des legistatives "
                                            "anticipées de 2024 pour faire face a la montée de l'extrême droite en "
                                            "france, le président Emmanuel macron ayant décidé le 9 juin de dissoudre "
@@ -49,7 +48,7 @@ def create_new_prompt() :
     ]
     return messages
 
-def mistral_request(messages) -> str:
+def mistral_request(messages) :
     print("receive: ", messages, "\n\n")
     client = MistralClient(api_key=api_key)
 
@@ -58,7 +57,7 @@ def mistral_request(messages) -> str:
         messages=messages,
     )
 
-    return chat_response.choices[0].message.content
+    return chat_response.choices[0].message
 
 
 def send_message(message: str):
@@ -86,5 +85,5 @@ if __name__ == '__main__':
                 break
             messages.append(ChatMessage(role="user", content=message_received))
             mistral_response = mistral_request(messages)
-            messages.append(ChatMessage(role="assistant", content=mistral_response))
-            send_message(mistral_response)
+            messages.append(mistral_response)
+            send_message(mistral_response.content)
