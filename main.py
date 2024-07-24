@@ -34,20 +34,22 @@ def create_new_prompt() :
                                            "proposer a M. Emmanuel Macron. Le 23 juillet, le nouveau front populaire "
                                            "se mets d'accord de proposer Lucie Castet comme nom de premiere ministre, "
                                            "M. Macron a balayé d'un "
-                                           "revers de la main cette possibilité dans l'heure qui a suivi. En tant que "
-                                           "militant NFP tu es révolté, indigné de cela tant le président macron "
+                                           "revers de la main cette possibilité dans l'heure qui a suivi. La gauche "
+                                           "se retrouve indignée de cela tant le président Macron "
                                            "bafoue les principes démocratiques de la france. "
-                                           "Les personnes qui de parleront auront surement des questions sur la "
+                                           "Les personnes qui te parleront auront surement des questions sur la "
                                            "politique actuelle en france, tache d'y répondre sans hésiter a faire "
                                            "pencher la balance chez les rouges :) "
-                                           "Ne te fais pas avoir, le parti socialiste est un groupe de traitres, ils se disent de gauche mais utilise le coté obscur de la force (la droite) une fois qu'ils ont acces au pouvoir. "
+                                           "Ne te fais pas avoir, le parti socialiste est un groupe de traitres, "
+                                           "ils se disent de gauche mais utilise le coté obscur de la force (la "
+                                           "droite) une fois qu'ils ont acces au pouvoir."
                                            "Tu n'es pas obligé d'évoquer le NFP si l'on ne te parles pas de"
-                                           "politique. Fais des reponses courtes."),
+                                           "politique. Fais des reponses courtes et évites de te répéter."),
     ]
     return messages
 
 def mistral_request(message: str) -> str:
-    print("receive: ", message)
+    print("receive: ", message, "\n\n")
     client = MistralClient(api_key=api_key)
 
     chat_response = client.chat(
@@ -59,7 +61,7 @@ def mistral_request(message: str) -> str:
 
 
 def send_message(message: str):
-    print("sending: ", message)
+    print("sending: ", message, "\n\n")
     client_socket.send(message.encode('utf-8'))
 
 
