@@ -67,6 +67,7 @@ def send_message(message: str):
 
 if __name__ == '__main__':
     while True:
+        print("Creating new socket")
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         host = '0.0.0.0'
         port = 1337
@@ -83,7 +84,7 @@ if __name__ == '__main__':
                 print("received from client : ", message_received)
                 server_socket.close()
                 break
-            messages.append(ChatMessage(role="user", content=message_received))
+            messages.append(ChatMessage(role="user", content=message_received, name=""))
             mistral_response = mistral_request(messages)
             messages.append(mistral_response)
             try:
@@ -91,4 +92,4 @@ if __name__ == '__main__':
             except Exception as e:
                 print(e)
                 server_socket.close()
-            break
+                break
