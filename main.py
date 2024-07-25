@@ -77,13 +77,16 @@ if __name__ == '__main__':
         print(f"Connected to {client_address}, creating new prompt for mistral")
         messages = create_new_prompt()
         while True:
-            try:
-                message_received = client_socket.recv(1024).decode('utf-8')
-            except Exception as e:
-                print(e)
+            message_received = client_socket.recv(1024).decode('utf-8')
+            if message_received == '':
                 server_socket.close()
                 break
             messages.append(ChatMessage(role="user", content=message_received))
             mistral_response = mistral_request(messages)
             messages.append(mistral_response)
-            send_message(mistral_response.content)
+            try:
+                send_message(mistral_response.content)
+            except Exception as e:
+                print(e)
+                server_socket.close()
+            break
