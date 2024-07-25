@@ -72,15 +72,15 @@ if __name__ == '__main__':
         port = 1337
         server_socket.bind((host, port))
         server_socket.listen(1)
-
-        print(f"Serveur démarré sur {host}:{port}. En attente de connexions...")
+        print(f"Server listening on {host}:{port}. waiting for connection...")
         client_socket, client_address = server_socket.accept()
-        print(f"Connexion établie avec {client_address}")
+        print(f"Connected to {client_address}, creating new prompt for mistral")
         messages = create_new_prompt()
         while True:
             try:
                 message_received = client_socket.recv(1024).decode('utf-8')
             except Exception as e:
+                print(e)
                 server_socket.close()
                 break
             messages.append(ChatMessage(role="user", content=message_received))
