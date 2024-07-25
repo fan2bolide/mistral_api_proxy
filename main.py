@@ -70,6 +70,7 @@ if __name__ == '__main__':
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         host = '0.0.0.0'
         port = 1337
+        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server_socket.bind((host, port))
         server_socket.listen(1)
         print(f"Server listening on {host}:{port}. waiting for connection...")
