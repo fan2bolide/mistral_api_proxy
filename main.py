@@ -80,6 +80,7 @@ if __name__ == '__main__':
         while True:
             message_received = client_socket.recv(1024).decode('utf-8')
             if message_received == '':
+                print("received from client : ", message_received)
                 server_socket.close()
                 break
             messages.append(ChatMessage(role="user", content=message_received))
