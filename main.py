@@ -11,9 +11,9 @@ def send_message(msg):
 
 if __name__ == '__main__':
     log(logs.title, "Start Mistral API interface")
+    messages = {}
 
     while True:
-        log(logs.event, "Creating new socket")
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         host, port = '0.0.0.0', 1312
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -21,10 +21,8 @@ if __name__ == '__main__':
         server_socket.listen(1)
         log(logs.event, f"Server listening on {host}:{port}. waiting for connection...")
         client_socket, client_address = server_socket.accept()
-        log(logs.event, f"Connected to {client_address}, creating new prompt for mistral")
 
-        messages = {}
-
+        log(logs.event, f"Connected to {client_address}")
         while True:
             messages_received = client_socket.recv(1024).decode()
             if not messages_received:
@@ -32,7 +30,9 @@ if __name__ == '__main__':
                 server_socket.close()
                 break
 
-            for message_received in messages_received.split('\n'):
+            for message_received in messages_received.split("\r\n"):
+                if not message_received:
+                    continue
                 log(logs.receive, message_received, fd=client_address)
                 first_part, message = message_received.split(" :", 1)
 
@@ -47,6 +47,7 @@ if __name__ == '__main__':
                     is_request = True
 
                 if target not in messages:
+                    log(logs.event, f"Create new message history for {target}")
                     messages[target] = mst.create_new_prompt(len(args) == 3)
                 messages[target].append(mst.ChatMessage(role="user", content=message))
                 if is_request:
