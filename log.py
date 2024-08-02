@@ -14,7 +14,6 @@ class logs:
     warning = "WARNING"
 
 
-# todo make same log than server
 def log(log_type, args, fd=0, type_error=""):
     log_msg = color.GREY + datetime.now().strftime("[%d/%m/%y %H:%M:%S]") + " " + color.BOLD + color.ITALIC + "mistral_api" + color.RESET + color.GREY + ": " + color.RESET;
     if log_type == logs.error:

@@ -8,8 +8,6 @@ def send_message(msg):
     log(logs.send, msg, fd=client_address)
     client_socket.send(msg.encode('utf-8'))
 
-#  todo handle rename nickname ?
-
 
 if __name__ == '__main__':
     log(logs.title, "Start Mistral API interface")
