@@ -26,34 +26,35 @@ if __name__ == '__main__':
         messages = {}
 
         while True:
-            message_received = client_socket.recv(1024).decode()
-            if not message_received:
+            messages_received = client_socket.recv(1024).decode()
+            if not messages_received:
                 log(logs.eventclose, f"Connection closed {client_address}")
                 server_socket.close()
                 break
 
-            log(logs.receive, message_received, fd=client_address)
-            first_part, message = message_received.split(" :", 1)
+            for message_received in messages_received.split('\n'):
+                log(logs.receive, message_received, fd=client_address)
+                first_part, message = message_received.split(" :", 1)
 
-            args = first_part.split(" ")
-            if len(args) == 3:
-                target = args[0]
-                message = args[1] + ": \"" + message + "\""
-                is_request = args[2] == "REQUEST"
-            else:
-                target = first_part
-                is_request = True
+                args = first_part.split(" ")
+                if len(args) == 3:
+                    target = args[0]
+                    message = args[1] + ": " + message
+                    is_request = args[2] == "REQUEST"
+                else:
+                    message = args[0] + ": " + message
+                    target = first_part
+                    is_request = True
 
-            if target not in messages:
-                messages[target] = mst.create_new_prompt(len(args) == 3)
-            messages[target].append(mst.ChatMessage(role="user", content=message))
-            log(logs.event, message)
-            if is_request:
-                mistral_response = mst.request(messages[target])
-                messages[target].append(mistral_response)
-                try:
-                    send_message(target + " :" + mistral_response.content)
-                except Exception as e:
-                    log(logs.error, str(e), type_error="Error sending mistral response")
-                    server_socket.close()
-                    break
+                if target not in messages:
+                    messages[target] = mst.create_new_prompt(len(args) == 3)
+                messages[target].append(mst.ChatMessage(role="user", content=message))
+                if is_request:
+                    mistral_response = mst.request(messages[target])
+                    messages[target].append(mistral_response)
+                    try:
+                        send_message(target + " :" + mistral_response.content)
+                    except Exception as e:
+                        log(logs.error, str(e), type_error="Error sending mistral response")
+                        server_socket.close()
+                        break

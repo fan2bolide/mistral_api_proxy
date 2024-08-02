@@ -15,7 +15,7 @@ class logs:
 
 
 def log(log_type, args, fd=0, type_error=""):
-    log_msg = color.GREY + datetime.now().strftime("[%d/%m/%y %H:%M:%S]") + " " + color.BOLD + color.ITALIC + "mistral_api" + color.RESET + color.GREY + ": " + color.RESET;
+    log_msg = color.GREY + datetime.now().strftime("[%d/%m/%y %H:%M:%S]") + " " + color.BOLD + color.ITALIC + "mistral_api" + color.RESET + color.GREY + ": " + color.RESET
     if log_type == logs.error:
         log_msg += color.BRED + type_error + color.RED
     elif log_type == logs.event:
