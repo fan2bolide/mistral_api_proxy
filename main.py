@@ -84,11 +84,12 @@ if __name__ == '__main__':
                 print("received from client : ", message_received)
                 server_socket.close()
                 break
-            messages.append(ChatMessage(role="user", content=message_received))
+            target, msg = message_received.split(": ", 1)
+            messages.append(ChatMessage(role="user", content=msg))
             mistral_response = mistral_request(messages)
             messages.append(mistral_response)
             try:
-                send_message(mistral_response.content)
+                send_message(target + ": " + mistral_response.content)
             except Exception as e:
                 print(e)
                 server_socket.close()
