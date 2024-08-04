@@ -9,6 +9,7 @@ try:
     api_key = environ["MISTRAL_API_KEY"]
 except KeyError:
     log(logs.error, "please add your mistral API key in your env 'MISTRAL_API_KEY'", type_error="API Key missing")
+    exit(1)
 
 model = "mistral-small-latest"
 

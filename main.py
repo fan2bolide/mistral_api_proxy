@@ -19,7 +19,7 @@ if __name__ == '__main__':
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server_socket.bind((host, port))
         server_socket.listen(1)
-        log(logs.event, f"Server listening on {host}:{port}. waiting for connection...")
+        log(logs.event, f"Server listening on {host}:{port}, waiting for connection...")
         client_socket, client_address = server_socket.accept()
 
         log(logs.event, f"Connected to {client_address}")
