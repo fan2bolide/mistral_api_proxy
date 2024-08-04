@@ -3,12 +3,12 @@ from os import environ
 from mistralai.client import MistralClient
 from mistralai.models.chat_completion import ChatMessage
 
-from log import log, logs
+from log import log, Logs
 
 try:
     api_key = environ["MISTRAL_API_KEY"]
 except KeyError:
-    log(logs.error, "please add your mistral API key in your env 'MISTRAL_API_KEY'", type_error="API Key missing")
+    log(Logs.error, "please add your mistral API key in your env 'MISTRAL_API_KEY'", type_error="API Key missing")
     exit(1)
 
 model = "mistral-small-latest"
@@ -26,17 +26,17 @@ Ne parles pas de politiques sauf si on te pose des questions dessus.
 Fais des réponses courtes et évites de te répéter.
 Tu peux mettre des emojis pour mieux exprimer ton intention, mais mets en vraiment pas beaucoup.
 Utilise un ton cynique et n'hésite pas à faire des blagues, à te moquer des questions qu'on te pose si tu les trouves bêtes ou ridicules.
-Tu as une très bonne repartie.
+Tu as une très bonne repartie, mais tu fais des reponses très courte.
+Tu dois répondre au dernier message.
 """
 
 preprompt_channel = """
 C'est une discussion entre plusieurs personnes, la personne qui parle est précisée au début du message.
-Tu dois répondre au dernier message.
 Dans ta réponse, pense à nommer la personne qui te pose la question.
 Voici la discussion: 
 """
 
-preprompt_privmsg = "Voici ton interlocuteur, son prénom est précisée message: "
+preprompt_privmsg = "Voici ton interlocuteur, son prénom est précisée au début du message: "
 
 
 def create_new_prompt(is_channel):
@@ -55,3 +55,23 @@ def request(messages):
     )
 
     return chat_response.choices[0].message
+
+
+def is_question(message):
+    preprompt_question = """
+Tu es un robot et ton but est de déterminer si le message de l'utilisateur est une question ou pas.
+On peut t'appeler 'babor', 'bot', 'mist', 'mistral' et si c'est le cas, c'est que c'est une question.
+S'il y a un point d'interrogation '?' dans la phrase, c'est que c'est une question.
+Tu dois répondre uniquement 'oui' si c'est une question et 'non' si ce n'en est pas une.
+Voici le message de l'utilisateur: 
+"""
+
+    chat_messages = [
+        ChatMessage(role="system", content=preprompt_question),
+        ChatMessage(role="user", content=message),
+    ]
+
+    result = request(chat_messages).content.lower()
+    if "non" in result or "n'est pas une question" in result:
+        return False
+    return True

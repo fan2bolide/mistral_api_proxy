@@ -1,46 +1,59 @@
 import sys
 from datetime import datetime
 
-from utils import color
+from utils.color import *
 
 
-class logs:
+class Logs:
+    close = "CLOSE"
     error = "ERROR"
     event = "EVENT"
-    eventclose = "EVENTCLOSE"
+    quit = "QUIT"
     receive = "RECEIVE"
     send = "SEND"
     title = "TITLE"
     warning = "WARNING"
 
 
-def log(log_type, args, fd=0, type_error=""):
-    log_msg = color.GREY + datetime.now().strftime("[%d/%m/%y %H:%M:%S]") + " " + color.BOLD + color.ITALIC + "mistral_api" + color.RESET + color.GREY + ": " + color.RESET
-    if log_type == logs.error:
-        log_msg += color.BRED + type_error + color.RED
-    elif log_type == logs.event:
-        log_msg += color.BGREEN
-    elif log_type == logs.eventclose:
-        log_msg += color.RED
-    elif log_type == logs.receive:
-        log_msg += color.BPURPLE + "Receive " + str(fd)
-    elif log_type == logs.send:
-        log_msg += color.BBLUE + "Send " + str(fd)
-    elif log_type == logs.title:
-        log_msg += color.BOLD + color.BCYAN + color.UNDERLINE
-    elif log_type == logs.warning:
-        log_msg += color.BYELLOW + "Warning" + color.RESET + color.YELLOW
-    elif log_type == logs.event:
-        log_msg += color.BGREEN
+def log(log_type, arg, target="", nickname="mistral", type_error=""):
+    log_msg = GREY + datetime.now().strftime("[%d/%m/%y %H:%M:%S]") + " " + BOLD + ITALIC + "mistral_api" + RESET + GREY + ": " + RESET
 
-    if log_type == logs.event or log_type == logs.eventclose or log_type == logs.title:
-        log_msg += args + color.RESET
-    elif log_type == logs.receive or log_type == logs.send:
-        log_msg += ": " + color.RESET + args
+    if log_type == Logs.close:
+        log_msg += RED
+    elif log_type == Logs.error:
+        log_msg += BRED + type_error + RED
+    elif log_type == Logs.event:
+        log_msg += BGREEN
+    elif log_type == Logs.event:
+        log_msg += BGREEN
+    elif log_type == Logs.quit:
+        log_msg += BRED
+    elif log_type == Logs.title:
+        log_msg += BOLD + BCYAN + UNDERLINE
+    elif log_type == Logs.warning:
+        log_msg += BYELLOW + "Warning" + RESET + YELLOW
+
+    if log_type == Logs.close or log_type == Logs.event or log_type == Logs.title or log_type == Logs.quit:
+        log_msg += arg
+    elif log_type == Logs.receive or log_type == Logs.send:
+        color, bcolor = ((BLUE, BBLUE), (PURPLE, BPURPLE))[log_type == Logs.send]
+        log_msg += f"{color}[{trg_log(target, color)}] {cmd_log(nickname, bcolor, color)}"
+        if arg != "join channel" and arg != "quit channel":
+            log_msg += ":"
+        log_msg += " " + arg
     else:
-        log_msg += ": " + args + color.RESET
+        log_msg += ": " + arg
 
-    if log_type == logs.error:
+    log_msg += RESET
+    if log_type == Logs.error:
         print(log_msg)
     else:
         print(log_msg, file=sys.stderr)
+
+
+def cmd_log(x, bcolor, color):
+    return bcolor + ITALIC + x + RESET + color
+
+
+def trg_log(x, color):
+    return color + BOLD + x + RESET + color
