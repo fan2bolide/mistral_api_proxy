@@ -32,7 +32,7 @@ Tu dois répondre au dernier message.
 
 preprompt_channel = """
 C'est une discussion entre plusieurs personnes, la personne qui parle est précisée au début du message.
-Dans ta réponse, pense à nommer la personne qui te pose la question.
+Dans ta réponse, pense à nommer la personne qui te pose la question, il est indique en debut du dernier message.
 Voici la discussion: 
 """
 
@@ -62,6 +62,7 @@ def is_question(message):
 Tu es un robot et ton but est de déterminer si le message de l'utilisateur est une question ou pas.
 On peut t'appeler 'babor', 'bot', 'mist', 'mistral' et si c'est le cas, c'est que c'est une question.
 S'il y a un point d'interrogation '?' dans la phrase, c'est que c'est une question.
+Si on te salue ou on te dit bonjour, considère que c'est une question.
 Tu dois répondre uniquement 'oui' si c'est une question et 'non' si ce n'en est pas une.
 Voici le message de l'utilisateur: 
 """
