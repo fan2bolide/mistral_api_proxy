@@ -3,6 +3,8 @@ from datetime import datetime
 
 from utils.color import *
 
+mist = "mistral API interface"
+
 
 class Logs:
     close = "CLOSE"
