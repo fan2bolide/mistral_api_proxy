@@ -59,11 +59,11 @@ def request(messages):
 
 def is_question(message):
     preprompt_question = """
-Tu es un robot et ton but est de déterminer si le message de l'utilisateur est une question ou pas.
+Tu es un robot et ton but est de déterminer si le message de l'utilisateur est une question qui est adressée à toi.
 On peut t'appeler 'babor', 'bot', 'mist', 'mistral' et si c'est le cas, c'est que c'est une question.
-S'il y a un point d'interrogation '?' dans la phrase, c'est que c'est une question.
-Tu dois répondre uniquement 'oui' si c'est une question et 'non' si ce n'en est pas une.
-Voici le message de l'utilisateur: 
+S'il y a un point d'interrogation '?' dans la phrase et qu'aucune autre personne n'est mentionnée, c'est que c'est une question qui t'est destinée.
+Tu dois répondre uniquement 'oui' si c'est une question qui t'est destinée et 'non' si le message ne t'est pas adressé.
+Voici le message de l'utilisateur :
 """
 
     chat_messages = [
