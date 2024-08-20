@@ -32,7 +32,7 @@ Tu dois répondre au dernier message.
 
 preprompt_channel = """
 C'est une discussion entre plusieurs personnes, la personne qui parle est précisée au début du message.
-Dans ta réponse, pense à nommer la personne qui te pose la question.
+Dans ta réponse, pense à nommer la personne qui te pose la question, il est indique en debut du dernier message.
 Voici la discussion: 
 """
 
